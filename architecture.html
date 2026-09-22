@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Architecture — BADWOLF Socket Server</title>
+<meta name="description" content="How it's built: Tauri 2 shell, a Tokio async core, a framing codec, a rule engine, and a vanilla-JS dashboard over Tauri IPC." />
+<meta name="theme-color" content="#03000a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; justify-content: center; margin: 8px 0; }
+  .node { background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--accent, var(--cyan));
+    border-radius: 6px; padding: 12px 16px; min-width: 150px; }
+  .node .t { font-family: var(--sans); font-size: 13px; color: #fff; }
+  .node .d { font-size: 11.5px; color: var(--dim); margin-top: 3px; }
+  .arrow { align-self: center; color: var(--cyan); font-size: 20px; }
+  .mod-row { display:flex; gap:14px; align-items:baseline; padding:12px 0; border-bottom:1px solid rgba(5,217,232,0.12); }
+  .mod-row:last-child { border-bottom:none; }
+  .mod-name { font-family: var(--code); color: var(--cyan); font-size:13px; min-width: 130px; }
+  .mod-row p { color: var(--dim); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="grid-bg"></div><div class="scan"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</a>
+    <button class="nav-hamburger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="use-cases.html">Use Cases</a>
+      <a href="architecture.html" class="active">Architecture</a>
+      <a href="docs.html">Docs</a>
+      <a href="demo.html">Demo</a>
+      <a href="docs.html#download" class="nav-cta">Download</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero" style="padding-bottom:20px;">
+  <div class="container">
+    <div class="kicker reveal">// under the neon</div>
+    <h1 class="reveal reveal-delay-1" style="font-size:clamp(30px,5vw,48px);">Architecture</h1>
+    <p class="hero-tagline reveal reveal-delay-2">A Tauri 2 shell, a <b>Tokio async core</b>, and a vanilla-JS dashboard — one process, no sidecars.</p>
+  </div>
+</section>
+
+<main class="container">
+
+  <!-- Layers -->
+  <section class="section">
+    <div class="cat-header reveal"><span class="label">The shape</span><h2>Two halves, <span class="gradient-text">one binary</span></h2>
+      <p class="subtitle">A Rust backend owns the sockets and all state; a static HTML/CSS/JS frontend renders it. They talk over Tauri's IPC — commands one way, events the other. Nothing else is running.</p></div>
+    <div class="flow reveal">
+      <div class="node" style="--accent:var(--pink);"><div class="t">Dashboard</div><div class="d">HTML · CSS · vanilla JS<br>served from the binary</div></div>
+      <div class="arrow">&#8646;</div>
+      <div class="node" style="--accent:var(--cyan);"><div class="t">Tauri 2 IPC</div><div class="d">25 commands &rarr;<br>9 event types &larr;</div></div>
+      <div class="arrow">&#8646;</div>
+      <div class="node" style="--accent:var(--lime);"><div class="t">Rust / Tokio core</div><div class="d">listeners, state,<br>rules, feeds, replay</div></div>
+      <div class="arrow">&#8646;</div>
+      <div class="node" style="--accent:var(--violet);"><div class="t">Sockets</div><div class="d">TCP + UDP<br>clients on the wire</div></div>
+    </div>
+  </section>
+
+  <!-- Data flow -->
+  <section class="section">
+    <div class="cat-header reveal"><span class="label">Inbound path</span><h2>What happens to <span class="gradient-text">a line on the wire</span></h2>
+      <p class="subtitle">Every byte a client sends walks the same path, whichever transport or framing it arrived on.</p></div>
+    <div class="flow reveal">
+      <div class="node" style="--accent:var(--violet);"><div class="t">accept / recv</div><div class="d">TCP task or UDP loop</div></div>
+      <div class="arrow">&#8594;</div>
+      <div class="node" style="--accent:var(--cyan);"><div class="t">FrameCodec</div><div class="d">split into a message</div></div>
+      <div class="arrow">&#8594;</div>
+      <div class="node" style="--accent:var(--pink);"><div class="t">render + record</div><div class="d">text/hex, metrics, stream</div></div>
+      <div class="arrow">&#8594;</div>
+      <div class="node" style="--accent:var(--amber);"><div class="t">auth &rarr; command &rarr; rules</div><div class="d">first match wins</div></div>
+      <div class="arrow">&#8594;</div>
+      <div class="node" style="--accent:var(--lime);"><div class="t">deliver / broadcast</div><div class="d">reply, or echo, or silence</div></div>
+    </div>
+    <p class="subtitle reveal" style="margin-top:20px;">Outbound bytes are re-framed by the same codec and pushed to a client's own unbounded channel (TCP) or sent to its address (UDP), then logged to the stream with per-client counters updated.</p>
+  </section>
+
+  <!-- Modules -->
+  <section class="section">
+    <div class="cat-header reveal"><span class="label">The code</span><h2>Ten small <span class="gradient-text">Rust modules</span></h2>
+      <p class="subtitle">Each does one thing; the pure ones (codec, payload, rules) carry the unit tests.</p></div>
+    <div class="glass reveal" style="padding:8px 24px;">
+      <div class="mod-row"><span class="mod-name">main.rs</span><p>windowed entry point &rarr; <code>lib::run()</code>.</p></div>
+      <div class="mod-row"><span class="mod-name">lib.rs</span><p>Tauri builder, the 25-command registry, and config load on startup.</p></div>
+      <div class="mod-row"><span class="mod-name">state.rs</span><p>config types, metrics, client records, recorder/replay state — the one shared <code>AppState</code>.</p></div>
+      <div class="mod-row"><span class="mod-name">server.rs</span><p>TCP accept loop, UDP loop + idle sweeper, per-client tasks, delivery, feeds and replay.</p></div>
+      <div class="mod-row"><span class="mod-name">codec.rs</span><p>the framing codec — newline / CRLF / length-prefix / raw — as a Tokio <code>Decoder</code>/<code>Encoder</code>.</p></div>
+      <div class="mod-row"><span class="mod-name">payload.rs</span><p>text-escape and hex parsing in; byte&rarr;text/hex rendering out, with binary detection.</p></div>
+      <div class="mod-row"><span class="mod-name">rules.rs</span><p>the auto-responder — compile, match, and the template renderer.</p></div>
+      <div class="mod-row"><span class="mod-name">feeds.rs</span><p>the timer-feed generator and the built-in geo world-map simulator.</p></div>
+      <div class="mod-row"><span class="mod-name">persist.rs</span><p>load/save <code>config.json</code> in the app config directory.</p></div>
+      <div class="mod-row"><span class="mod-name">commands.rs</span><p>the 25 IPC handlers the dashboard calls.</p></div>
+    </div>
+  </section>
+
+  <!-- Concurrency + choices -->
+  <section class="section">
+    <div class="cat-header reveal"><span class="label">Why it holds up</span><h2>Concurrency &amp; <span class="gradient-text">design choices</span></h2></div>
+    <div class="grid-2">
+      <div class="glass feature-card reveal"><h4>A task per client</h4><p>Each connection runs on its own Tokio task with a <code>select!</code> over "bytes to send", "bytes received" and "kick". A <b>per-client cancellation token</b> makes a kick or a shutdown close the socket immediately — no polling, no polite timeout.</p></div>
+      <div class="glass feature-card reveal reveal-delay-1"><h4>Lock-light shared state</h4><p><code>DashMap</code> for the client roster and channels, atomics for the counters, and <code>parking_lot</code> mutexes only for the small ring buffers. The metrics snapshot is a cheap read.</p></div>
+      <div class="glass feature-card reveal reveal-delay-2"><h4>Live config, no bounce</h4><p>Saving rules or feeds recompiles them and restarts the feed tasks in place via a swappable token — the listener never drops. Only bind, transport and framing need a restart.</p></div>
+      <div class="glass feature-card reveal reveal-delay-3"><h4>No runtime, no sidecar</h4><p>Everything is in one Rust binary behind the webview. No .NET, no Node, no Python, no external service — the whole reason the download is ~6 MB and starts instantly.</p></div>
+    </div>
+  </section>
+
+  <section class="quote-section">
+    <div class="container">
+      <blockquote class="reveal">Small modules, one shared state, a task per socket.
+        <span class="gradient-text">Boring on purpose</span> — so the neon can be the interesting part.</blockquote>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</div>
+        <p>A scriptable TCP + UDP endpoint with a real-time dashboard. Bind a port, watch everything, script the replies.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="features.html">Features</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="docs.html">Documentation</a>
+        <a href="use-cases.html">Use Cases</a>
+      </div>
+      <div class="footer-col">
+        <h5>MYTHOS</h5>
+        <a href="docs.html#download">Download</a>
+        <a href="use-cases.html">Pairs with Pcapsule</a>
+        <a href="docs.html#protocol">Client protocol</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 BADWOLF Labs. Open source under the MIT License.</span>
+      <span>Built with Tauri 2 &middot; Rust &middot; Tokio</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  document.querySelector(".nav-hamburger")?.addEventListener("click", () => document.querySelector(".nav-links").classList.toggle("open"));
+</script>
+</body>
+</html>

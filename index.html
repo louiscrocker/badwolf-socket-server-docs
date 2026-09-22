@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BADWOLF Socket Server — the other end of the wire</title>
+<meta name="description" content="A scriptable TCP + UDP endpoint with a real-time cyberpunk dashboard. Auto-responder, feeds, hex, record/replay — one 6 MB binary, no runtime." />
+<meta name="theme-color" content="#03000a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="bg"></div><div class="grid-bg"></div><div class="scan"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</a>
+    <button class="nav-hamburger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="features.html">Features</a>
+      <a href="use-cases.html">Use Cases</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="docs.html">Docs</a>
+      <a href="demo.html">Demo</a>
+      <a href="docs.html#download" class="nav-cta">Download</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker reveal">// the other end of the wire</div>
+    <h1 class="reveal reveal-delay-1">BADWOLF Socket Server</h1>
+    <p class="hero-tagline reveal reveal-delay-2">A scriptable <b>TCP + UDP</b> endpoint you can actually watch.</p>
+    <p class="hero-subtitle reveal reveal-delay-2">Bind a port and see everything — every client, every byte, every message — then make the server answer however your client, device, lab or demo needs. No runtime, no cloud, no account. One ~6&nbsp;MB binary.</p>
+    <div class="hero-buttons reveal reveal-delay-3">
+      <a href="docs.html#download" class="btn btn-primary">&#9662; Download</a>
+      <a href="features.html" class="btn btn-ghost">Explore features</a>
+    </div>
+    <div class="badges reveal reveal-delay-3">
+      <span class="badge">v<b>1.1.0</b></span>
+      <span class="badge">Tauri <b>2</b> · Rust · Tokio</span>
+      <span class="badge">~<b>6 MB</b>, no runtime</span>
+      <span class="badge"><b>MIT</b></span>
+    </div>
+  </div>
+  <div class="container">
+    <div class="stats-strip reveal reveal-delay-3">
+      <div class="stat"><div class="stat-val">2</div><div class="stat-lbl">Transports · TCP + UDP</div></div>
+      <div class="stat"><div class="stat-val">4</div><div class="stat-lbl">Wire framings</div></div>
+      <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">Rule match modes</div></div>
+      <div class="stat"><div class="stat-val">7</div><div class="stat-lbl">Scenario presets</div></div>
+      <div class="stat"><div class="stat-val">0</div><div class="stat-lbl">Runtime deps</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT IS FOR -->
+<section class="section value-props">
+  <div class="container">
+    <div class="reveal" style="text-align:center; margin-bottom:44px;">
+      <span class="label">Who it is for</span>
+      <h2>Learn the wire by <span class="gradient-text">watching it happen</span></h2>
+    </div>
+    <div class="grid-3">
+      <div class="glass feature-card reveal reveal-delay-1">
+        <div class="vp-icon" style="background:rgba(5,217,232,0.12);">&#128421;</div>
+        <h4>Developers</h4>
+        <p>Writing a client and need to see what it actually sends and gets back.</p>
+        <ul>
+          <li>Live message stream in text and hex</li>
+          <li>Per-client byte and message counters</li>
+          <li>Scripted replies so the server behaves like the real thing</li>
+          <li>TCP or UDP, four framings, no code change</li>
+        </ul>
+      </div>
+      <div class="glass feature-card reveal reveal-delay-2">
+        <div class="vp-icon" style="background:rgba(255,42,109,0.12);">&#127891;</div>
+        <h4>Instructors &amp; students</h4>
+        <p>A dashboard that makes connect &rarr; send &rarr; broadcast &rarr; disconnect visible to a room.</p>
+        <ul>
+          <li>One-click scenario presets</li>
+          <li>Record a session, replay it in class</li>
+          <li>Throughput chart and structured syslog</li>
+          <li>Pairs with Pcapsule for the packet-level view</li>
+        </ul>
+      </div>
+      <div class="glass feature-card reveal reveal-delay-3">
+        <div class="vp-icon" style="background:rgba(177,74,255,0.12);">&#128268;</div>
+        <h4>Lab builders &amp; bench engineers</h4>
+        <p>A throwaway endpoint that logs what hit it and can be scripted to answer.</p>
+        <ul>
+          <li>Auto-responder: match a line, send a reply</li>
+          <li>Hex view and binary framing for real devices</li>
+          <li>Timed feeds, including a built-in geo stream</li>
+          <li>Instant kick, direct send, token auth</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS INSIDE -->
+<section class="section">
+  <div class="container">
+    <div class="reveal" style="text-align:center; margin-bottom:44px;">
+      <span class="label">What is inside</span>
+      <h2>Everything is <span class="gradient-text">visible and scriptable</span></h2>
+      <p class="subtitle" style="margin:12px auto 0;">Six capability areas, all driven from one neon dashboard. Tap a card for the detail.</p>
+    </div>
+    <div class="cat-cards">
+      <a href="features.html#listen" class="glass cat-card reveal reveal-delay-1">
+        <div class="cat-count">2</div><h4>Transports &amp; framing</h4>
+        <p>TCP + UDP on any bind, with newline, CRLF, 16-bit length-prefix or raw framing.</p>
+      </a>
+      <a href="features.html#see" class="glass cat-card reveal reveal-delay-2">
+        <div class="cat-count">6</div><h4>Observe</h4>
+        <p>Live client roster, text/hex message stream, metrics tiles, throughput chart, syslog, instant kick.</p>
+      </a>
+      <a href="features.html#answer" class="glass cat-card reveal reveal-delay-3">
+        <div class="cat-count">6</div><h4>Respond</h4>
+        <p>Auto-responder with six match modes, rich templates, direct send, command protocol, token auth.</p>
+      </a>
+      <a href="features.html#drive" class="glass cat-card reveal reveal-delay-1">
+        <div class="cat-count">3</div><h4>Drive traffic</h4>
+        <p>Timed template feeds, a built-in geo world-map stream, and seven one-click scenario presets.</p>
+      </a>
+      <a href="features.html#capture" class="glass cat-card reveal reveal-delay-2">
+        <div class="cat-count">3</div><h4>Capture &amp; replay</h4>
+        <p>Record a session, export/import JSONL, replay to live clients at 0.5&times;&ndash;full speed with original timing.</p>
+      </a>
+      <a href="features.html#built" class="glass cat-card reveal reveal-delay-3">
+        <div class="cat-count">3</div><h4>Built right</h4>
+        <p>One ~6 MB binary, no runtime, 18 unit tests, MSI + NSIS installers, locked-down CSP.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- POSITIONING -->
+<section class="quote-section">
+  <div class="container">
+    <blockquote class="reveal">Design it, stand it up here, then watch it on the wire.
+      <span class="gradient-text">The observable server half</span> of the BADWOLF network-teaching story.</blockquote>
+    <cite class="reveal reveal-delay-1">// pairs with Pcapsule &middot; part of the BADWOLF MYTHOS suite</cite>
+  </div>
+</section>
+
+<!-- HONEST SCOPE -->
+<section class="section">
+  <div class="container">
+    <div class="callout reveal">
+      <h3>&#9888; Honest scope</h3>
+      <p>It is a <b>single-host tool</b>, and that focus is the point. It is <b>not</b> a load generator,
+      a protocol analyser, or an API client — it's the endpoint those tools talk to, and the one place
+      you can watch the whole exchange happen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="download">
+  <div class="container">
+    <div class="glass reveal">
+      <span class="label">Get it</span>
+      <h2>One binary. <span class="gradient-text">Nothing to install alongside it.</span></h2>
+      <p class="subtitle" style="margin:12px auto 0;">Windows MSI or NSIS installer, or build from source with <code>npm run build</code>. Cross-platform by design on Tauri.</p>
+      <div class="cta-buttons">
+        <a href="docs.html#download" class="btn btn-primary">&#9662; Install</a>
+        <a href="docs.html" class="btn btn-ghost">Read the docs</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</div>
+        <p>A scriptable TCP + UDP endpoint with a real-time dashboard. Bind a port, watch everything, script the replies.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="features.html">Features</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="docs.html">Documentation</a>
+        <a href="use-cases.html">Use Cases</a>
+      </div>
+      <div class="footer-col">
+        <h5>MYTHOS</h5>
+        <a href="docs.html#download">Download</a>
+        <a href="use-cases.html">Pairs with Pcapsule</a>
+        <a href="docs.html#protocol">Client protocol</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 BADWOLF Labs. Open source under the MIT License.</span>
+      <span>Built with Tauri 2 &middot; Rust &middot; Tokio</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  document.querySelector(".nav-hamburger")?.addEventListener("click", () => document.querySelector(".nav-links").classList.toggle("open"));
+</script>
+</body>
+</html>

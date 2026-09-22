@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Use Cases — BADWOLF Socket Server</title>
+<meta name="description" content="Who uses a scriptable, observable TCP/UDP endpoint, and the scenario preset for each: developers, instructors, lab builders, bench engineers." />
+<meta name="theme-color" content="#03000a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="bg"></div><div class="grid-bg"></div><div class="scan"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</a>
+    <button class="nav-hamburger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="use-cases.html" class="active">Use Cases</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="docs.html">Docs</a>
+      <a href="demo.html">Demo</a>
+      <a href="docs.html#download" class="nav-cta">Download</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero" style="padding-bottom:20px;">
+  <div class="container">
+    <div class="kicker reveal">// four people, one endpoint</div>
+    <h1 class="reveal reveal-delay-1" style="font-size:clamp(30px,5vw,48px);">Use Cases</h1>
+    <p class="hero-tagline reveal reveal-delay-2">Every one of these is a scenario preset you load in one click — then <b>watch it work</b>.</p>
+  </div>
+</section>
+
+<main class="container">
+
+  <section class="section">
+    <div class="grid-2">
+      <div class="glass feature-card reveal">
+        <div class="vp-icon" style="background:rgba(5,217,232,0.12);">&#128421;</div>
+        <h4>The developer with a client to test</h4>
+        <p>You're writing something that speaks a socket — game netcode, an embedded client, a custom line protocol, your first `connect()`. You need to know it sends what you think and handles what comes back.</p>
+        <ul>
+          <li>Point your client at the <b>ECHO</b> or <b>MOCK API</b> preset and read every request/response in the stream</li>
+          <li>Flip to hex to confirm the exact bytes and framing</li>
+          <li>Script canned replies so the server behaves like the real backend before it exists</li>
+          <li>Broadcast or direct-send to poke your client's receive path</li>
+        </ul>
+      </div>
+      <div class="glass feature-card reveal reveal-delay-1">
+        <div class="vp-icon" style="background:rgba(255,42,109,0.12);">&#127891;</div>
+        <h4>The instructor teaching the wire</h4>
+        <p>A room needs to <i>see</i> what a socket does. Slides don't move; this does — connections appear, counters climb, messages scroll, a kick drops a client on cue.</p>
+        <ul>
+          <li>Load the <b>CHAT RELAY</b> preset and have the class connect and talk through it</li>
+          <li>Record a session, then replay it next lecture at any speed</li>
+          <li>Show framing live: switch newline &rarr; length-prefix and watch parsing change</li>
+          <li>Pair with <b>Pcapsule</b> to jump from "what the server saw" to "what the packet looked like"</li>
+        </ul>
+      </div>
+      <div class="glass feature-card reveal reveal-delay-2">
+        <div class="vp-icon" style="background:rgba(177,74,255,0.12);">&#129513;</div>
+        <h4>The lab &amp; CTF builder</h4>
+        <p>You need a throwaway service that stands in for something — a listener, a status endpoint, a chatty device — logs what reaches it, and answers on script.</p>
+        <ul>
+          <li>Use the auto-responder to turn any line into a scripted, templated reply</li>
+          <li><b>GEO MAP</b> preset streams live markers — a ready-made moving data source</li>
+          <li>Delay, broadcast, or hang-up rules to shape the exercise</li>
+          <li>Export the session as JSONL and ship it with the challenge</li>
+        </ul>
+      </div>
+      <div class="glass feature-card reveal reveal-delay-3">
+        <div class="vp-icon" style="background:rgba(0,255,159,0.12);">&#128295;</div>
+        <h4>The bench &amp; QA engineer</h4>
+        <p>A device is on the bench and you need to see what it emits and feed it what it expects — the job Hercules did, now cross-platform with UDP, hex and scripting.</p>
+        <ul>
+          <li><b>BINARY DEVICE</b> preset: length-prefixed frames, hex in and hex out</li>
+          <li><b>IOT SENSOR</b> preset: a telemetry feed plus <code>READ</code>/<code>STATUS</code> responders, over TCP <i>and</i> UDP</li>
+          <li>Per-client byte counters to confirm what actually went out</li>
+          <li>Token auth to mimic a gated device handshake</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="reveal" style="text-align:center; margin-bottom:34px;">
+      <span class="label">The preset map</span>
+      <h2>Pick the one <span class="gradient-text">closest to your job</span></h2>
+    </div>
+    <div class="glass" style="padding:8px 22px;">
+      <table>
+        <thead><tr><th>Preset</th><th>Sets up</th><th>Reach for it when</th></tr></thead>
+        <tbody>
+          <tr><td><b>Echo chamber</b></td><td>TCP, newline, echo + commands</td><td>first sanity check of any client</td></tr>
+          <tr><td><b>Chat relay</b></td><td>rebroadcasts every line to all</td><td>a classroom or multi-client demo</td></tr>
+          <tr><td><b>IoT sensor</b></td><td>TCP+UDP, telemetry feed, <code>READ</code>/<code>STATUS</code> rules</td><td>a device client or telemetry consumer</td></tr>
+          <tr><td><b>Mock API</b></td><td>regex-routed replies, delay, hang-up</td><td>standing in for a line-based backend</td></tr>
+          <tr><td><b>Binary device</b></td><td>length-prefix framing, hex replies</td><td>binary protocols and hex practice</td></tr>
+          <tr><td><b>Geo map</b></td><td>the built-in moving-marker feed</td><td>a live data source / the FTXUI map</td></tr>
+          <tr><td><b>Gated</b></td><td>require <code>/auth &lt;token&gt;</code></td><td>testing an authenticated handshake</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="quote-section">
+    <div class="container">
+      <blockquote class="reveal">Not sure it fits your case? If a client connects over TCP or UDP,
+        <span class="gradient-text">you can watch it and script its other end here.</span></blockquote>
+      <cite class="reveal reveal-delay-1">// and if you need the packet-level view, that's Pcapsule's job</cite>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</div>
+        <p>A scriptable TCP + UDP endpoint with a real-time dashboard. Bind a port, watch everything, script the replies.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="features.html">Features</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="docs.html">Documentation</a>
+        <a href="use-cases.html">Use Cases</a>
+      </div>
+      <div class="footer-col">
+        <h5>MYTHOS</h5>
+        <a href="docs.html#download">Download</a>
+        <a href="use-cases.html">Pairs with Pcapsule</a>
+        <a href="docs.html#protocol">Client protocol</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 BADWOLF Labs. Open source under the MIT License.</span>
+      <span>Built with Tauri 2 &middot; Rust &middot; Tokio</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  document.querySelector(".nav-hamburger")?.addEventListener("click", () => document.querySelector(".nav-links").classList.toggle("open"));
+</script>
+</body>
+</html>

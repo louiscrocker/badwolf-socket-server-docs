@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Demo — BADWOLF Socket Server</title>
+<meta name="description" content="A 90-second guided walkthrough of the BADWOLF Socket Server: scenario preset, live client, hex view, scripted reply, instant kick, record & replay." />
+<meta name="theme-color" content="#03000a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .media { position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--line);
+    background: linear-gradient(135deg, var(--bg-2), var(--bg-3)); }
+  .media img { display: block; width: 100%; height: auto; }
+  .media.ph { aspect-ratio: 16 / 10; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; }
+  .media.ph::before { content: ""; position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(5,217,232,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(5,217,232,0.06) 1px, transparent 1px);
+    background-size: 24px 24px; }
+  .media .cam { font-size: 30px; color: var(--cyan); opacity: .7; z-index:1; }
+  .media .plabel { font-family: var(--code); font-size: 12px; color: var(--dim); letter-spacing: 0.06em; z-index:1; padding: 0 16px; }
+  .media .ptag { position: absolute; top: 10px; left: 10px; font-family: var(--code); font-size: 10px; letter-spacing: 0.1em;
+    color: var(--bg-0); background: var(--cyan); padding: 2px 7px; border-radius: 3px; z-index:1; }
+  .film { display: grid; grid-template-columns: 1fr; gap: 22px; }
+  .frame { display: grid; grid-template-columns: 96px 1fr; gap: 20px; align-items: start; }
+  .frame .stamp { font-family: var(--sans); font-weight: 900; font-size: 15px; color: var(--cyan); padding-top: 4px; letter-spacing: 0.06em; }
+  .frame .stamp small { display:block; color: var(--faint); font-size: 11px; font-family: var(--code); font-weight: 400; margin-top: 3px; }
+  .frame .body h4 { font-size: 16px; margin-bottom: 6px; }
+  .frame .body p { color: var(--dim); font-size: 13.5px; }
+  .frame .body .say { color: var(--text); font-size: 13.5px; margin-top: 6px; border-left: 2px solid var(--pink); padding-left: 10px; }
+  .frame .body .media { margin-top: 12px; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  @media (max-width: 640px){ .frame { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="grid-bg"></div><div class="scan"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</a>
+    <button class="nav-hamburger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="use-cases.html">Use Cases</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="docs.html">Docs</a>
+      <a href="demo.html" class="active">Demo</a>
+      <a href="docs.html#download" class="nav-cta">Download</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero" style="padding-bottom:20px;">
+  <div class="container">
+    <div class="kicker reveal">// ninety seconds, no narration needed</div>
+    <h1 class="reveal reveal-delay-1" style="font-size:clamp(30px,5vw,48px);">See it move</h1>
+    <p class="hero-tagline reveal reveal-delay-2">One scenario, one client, and the dashboard <b>reacting in real time</b> — from a cold START to a replayed session.</p>
+    <div class="hero-buttons reveal reveal-delay-3">
+      <a href="docs.html#download" class="btn btn-primary">&#9662; Try it yourself</a>
+      <a href="features.html" class="btn btn-ghost">See the features</a>
+    </div>
+  </div>
+</section>
+
+<main class="container">
+
+  <!-- HERO REEL PLACEHOLDER -->
+  <section class="section-sm">
+    <div class="media ph reveal" style="aspect-ratio:16/9;">
+      <span class="ptag">CLIP · ~90s</span>
+      <span class="cam">&#9654;</span>
+      <span class="plabel">Walkthrough capture drops in here<br>(OBS window capture &rarr; <code>demo.mp4</code> / <code>demo.gif</code>)</span>
+    </div>
+  </section>
+
+  <!-- STORYBOARD -->
+  <section class="section">
+    <div class="cat-header reveal"><span class="label">The walkthrough</span><h2>Seven beats, <span class="gradient-text">cut on the action</span></h2>
+      <p class="subtitle">The full recipe lives in <code>docs/demo-shot-list.md</code>. Each frame below is a moment to capture; the client action drives the on-screen reaction.</p></div>
+
+    <div class="film">
+      <div class="frame reveal">
+        <div class="stamp">01<small>0:00–0:12</small></div>
+        <div class="body">
+          <h4>Load a scenario &amp; START</h4>
+          <p>CONFIG tab &rarr; pick <b>IOT SENSOR</b> from the dropdown &rarr; LOAD. A rule and a feed appear; transport reads TCP+UDP. Hit START — the status pill flips ONLINE.</p>
+          <p class="say">"One click stands up a whole device simulator."</p>
+          <div class="media ph"><span class="ptag">SHOT 1</span><span class="cam">&#9673;</span><span class="plabel">CONFIG tab, preset loaded, pill ONLINE</span></div>
+        </div>
+      </div>
+
+      <div class="frame reveal">
+        <div class="stamp">02<small>0:12–0:28</small></div>
+        <div class="body">
+          <h4>A client connects</h4>
+          <p>In a terminal: <code>python tools/probe.py</code>. The DASHBOARD tiles jump, the throughput line moves, the LIVE FEED fills, and a client row appears.</p>
+          <p class="say">"Everything the client does, visible."</p>
+          <div class="media ph"><span class="ptag">SHOT 2</span><span class="cam">&#9673;</span><span class="plabel">DASHBOARD live — tiles + throughput moving</span></div>
+        </div>
+      </div>
+
+      <div class="frame reveal">
+        <div class="stamp">03<small>0:28–0:42</small></div>
+        <div class="body">
+          <h4>Read the bytes</h4>
+          <p>MESSAGES tab &rarr; toggle <b>HEX</b>. Text or exact bytes on the wire, binary auto-tagged.</p>
+          <p class="say">"This is what the device actually sent."</p>
+          <div class="media ph"><span class="ptag">SHOT 3</span><span class="cam">&#9673;</span><span class="plabel">MESSAGES stream in HEX view</span></div>
+        </div>
+      </div>
+
+      <div class="frame reveal">
+        <div class="stamp">04<small>0:42–0:58</small></div>
+        <div class="body">
+          <h4>Script a reply</h4>
+          <p>RULES tab shows the <code>READ &rarr; sample</code> rule. Send <code>READ</code> (<code>python tools/probe.py --send READ</code>) — the templated JSON comes back and the hit count ticks.</p>
+          <p class="say">"Responses are content, not code — regex in, template out."</p>
+          <div class="media ph"><span class="ptag">SHOT 4</span><span class="cam">&#9673;</span><span class="plabel">RULES tab, a rule matching, hit count rising</span></div>
+        </div>
+      </div>
+
+      <div class="frame reveal">
+        <div class="stamp">05<small>0:58–1:08</small></div>
+        <div class="body">
+          <h4>Kick, instantly</h4>
+          <p>CLIENTS tab &rarr; KICK the probe. It drops at once, the row vanishes, a disconnect lands in the feed.</p>
+          <p class="say">"Instant, not a polite timeout."</p>
+          <div class="media ph"><span class="ptag">SHOT 5</span><span class="cam">&#9673;</span><span class="plabel">CLIENTS tab, mid-kick</span></div>
+        </div>
+      </div>
+
+      <div class="frame reveal">
+        <div class="stamp">06<small>1:08–1:22</small></div>
+        <div class="body">
+          <h4>Record &amp; replay</h4>
+          <p>RECORDER tab &rarr; RECORD, let a few messages flow, STOP &rarr; EXPORT .JSONL &rarr; LOAD INTO REPLAY &rarr; REPLAY. The progress bar sweeps.</p>
+          <p class="say">"Capture a session, hand it to a student, replay it tomorrow."</p>
+          <div class="media ph"><span class="ptag">SHOT 6</span><span class="cam">&#9673;</span><span class="plabel">RECORDER / REPLAY mid-replay</span></div>
+        </div>
+      </div>
+
+      <div class="frame reveal">
+        <div class="stamp">07<small>1:22–1:30</small></div>
+        <div class="body">
+          <h4>Close on the map</h4>
+          <p>Load the <b>GEO</b> preset and <code>python tools/probe.py --hold 20</code> — the world-map marker stream (FTXUI_SOCKET, folded in) as a living close-out.</p>
+          <div class="media ph"><span class="ptag">SHOT 7</span><span class="cam">&#9673;</span><span class="plabel">GEO feed streaming markers</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="callout reveal">
+    <h3>&#9679; Media pending capture</h3>
+    <p>The frames above are <b>placeholders</b>. To fill them: run the walkthrough with the app,
+    capture per <code>docs/demo-shot-list.md</code> (OBS window capture, 60&nbsp;fps), drop the images
+    into <code>docs/media/</code> and swap each placeholder <code>&lt;div class="media ph"&gt;</code>
+    for an <code>&lt;img&gt;</code>. Nothing here is a mock-up of the UI — just labelled slots.</p>
+  </div>
+
+  <section class="quote-section">
+    <div class="container">
+      <blockquote class="reveal">One binary, one window, <span class="gradient-text">START and watch.</span></blockquote>
+      <cite class="reveal reveal-delay-1">// the cheapest thing in the family to demo</cite>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</div>
+        <p>A scriptable TCP + UDP endpoint with a real-time dashboard. Bind a port, watch everything, script the replies.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="features.html">Features</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="docs.html">Documentation</a>
+        <a href="use-cases.html">Use Cases</a>
+      </div>
+      <div class="footer-col">
+        <h5>MYTHOS</h5>
+        <a href="demo.html">Live demo</a>
+        <a href="docs.html#download">Download</a>
+        <a href="docs.html#protocol">Client protocol</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 BADWOLF Labs. Open source under the MIT License.</span>
+      <span>Built with Tauri 2 &middot; Rust &middot; Tokio</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  document.querySelector(".nav-hamburger")?.addEventListener("click", () => document.querySelector(".nav-links").classList.toggle("open"));
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Features — BADWOLF Socket Server</title>
+<meta name="description" content="A scriptable TCP + UDP endpoint you can actually watch: auto-responder, feeds, hex, record/replay — one 6 MB binary." />
+<meta name="theme-color" content="#03000a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="bg"></div><div class="grid-bg"></div><div class="scan"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</a>
+    <button class="nav-hamburger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="features.html" class="active">Features</a>
+      <a href="use-cases.html">Use Cases</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="docs.html">Docs</a>
+      <a href="demo.html">Demo</a>
+      <a href="docs.html#download" class="nav-cta">Download</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero" style="padding-bottom:20px;">
+  <div class="container">
+    <div class="kicker reveal">// everything below is true of v1.1</div>
+    <h1 class="reveal reveal-delay-1" style="font-size:clamp(30px,5vw,48px);">Features</h1>
+    <p class="hero-tagline reveal reveal-delay-2">Bind a port and <b>see everything</b> — then make the server answer however your client, device, lab or demo needs.</p>
+  </div>
+  <div class="container">
+    <div class="stats-strip reveal reveal-delay-3">
+      <div class="stat"><div class="stat-val">2</div><div class="stat-lbl">Transports</div></div>
+      <div class="stat"><div class="stat-val">4</div><div class="stat-lbl">Framings</div></div>
+      <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">Match modes</div></div>
+      <div class="stat"><div class="stat-val">7</div><div class="stat-lbl">Presets</div></div>
+      <div class="stat"><div class="stat-val">18</div><div class="stat-lbl">Unit tests</div></div>
+      <div class="stat"><div class="stat-val">0</div><div class="stat-lbl">Runtime deps</div></div>
+    </div>
+  </div>
+</section>
+
+<main class="container">
+
+  <section class="section" id="listen">
+    <div class="cat-header reveal"><span class="label">01 · Listen</span><h2>Listen on <span class="gradient-text">anything</span></h2>
+      <p class="subtitle">One endpoint that speaks to line protocols and binary devices alike, without a code change.</p></div>
+    <div class="feat-grid">
+      <div class="glass feat-card c-cyan reveal"><span class="ic">&#9889;</span><h4>TCP &amp; UDP</h4><p>Run either or both on any bind address and port, on an async Tokio core with every client on its own task.</p></div>
+      <div class="glass feat-card c-cyan reveal"><span class="ic">&#9707;</span><h4>Four wire framings</h4><p>Newline, CRLF, <b>16-bit length-prefix</b>, and <b>raw</b> — switch framing without touching code.</p></div>
+      <div class="glass feat-card c-cyan reveal"><span class="ic">&#9878;</span><h4>Guarded at the door</h4><p>Configurable max frame size and a connection cap of up to <code>100,000</code>, enforced on accept.</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="see">
+    <div class="cat-header reveal"><span class="label">02 · Observe</span><h2>See <span class="gradient-text">every byte</span></h2>
+      <p class="subtitle">The thing no <code>ncat</code> or <code>telnet</code> gives you: the whole exchange, live, on one screen.</p></div>
+    <div class="feat-grid">
+      <div class="glass feat-card c-pink reveal"><span class="ic">&#9906;</span><h4>Live client roster</h4><p>Every socket with address, protocol, uptime, per-client RX/TX message and byte counters, and a last-activity clock — all real-time.</p></div>
+      <div class="glass feat-card c-pink reveal"><span class="ic">&#9636;</span><h4>Text &amp; hex stream</h4><p>Flip between a readable view and the <b>exact bytes on the wire</b>. Binary payloads are auto-detected and tagged.</p></div>
+      <div class="glass feat-card c-pink reveal"><span class="ic">&#9709;</span><h4>Filter it</h4><p>Narrow the stream by direction — RX / TX / broadcast / system — and by free text.</p></div>
+      <div class="glass feat-card c-pink reveal"><span class="ic">&#128200;</span><h4>Metrics &amp; throughput</h4><p>A neon msg/sec plot plus tiles for active / total / peak connections, bytes in/out, UDP datagrams and rule hits.</p></div>
+      <div class="glass feat-card c-pink reveal"><span class="ic">&#9638;</span><h4>Structured syslog</h4><p>Six levels, level-filtered and grep-able — every connect, disconnect, rule and error, timestamped.</p></div>
+      <div class="glass feat-card c-pink reveal"><span class="ic">&#9873;</span><h4>Instant kick</h4><p>Drop any client immediately via a per-client kill switch — goodbye, socket closed, cleaned up at once. No polite timeout.</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="answer">
+    <div class="cat-header reveal"><span class="label">03 · Respond</span><h2>Answer like a <span class="gradient-text">real service</span></h2>
+      <p class="subtitle">Turn the endpoint into whatever the other side expects — responses are content, not code.</p></div>
+    <div class="feat-grid">
+      <div class="glass feat-card c-violet reveal"><span class="ic">&#9881;</span><h4>Auto-responder</h4><p>Ordered rules matched by <b>any / exact / prefix / contains / regex / hex-prefix</b>; first enabled match wins. Reply in text or hex, add a delay, target the sender or broadcast, and optionally hang up after.</p></div>
+      <div class="glass feat-card c-violet reveal"><span class="ic">&#8635;</span><h4>Edits apply live</h4><p>Change rules while the listener runs — no restart, no recompile. Tune a mock device between messages.</p></div>
+      <div class="glass feat-card c-violet reveal"><span class="ic">&#10022;</span><h4>Rich reply templates</h4><p>Drop in <code>{client_addr}</code> <code>{seq}</code> <code>{ts}</code> <code>{input}</code>, regex groups <code>{g1}</code>…<code>{g9}</code>, and randomizers <code>{rand:a-b}</code> <code>{choice:a|b|c}</code> for lifelike, varying output.</p></div>
+      <div class="glass feat-card c-violet reveal"><span class="ic">&#10148;</span><h4>Direct send &amp; broadcast</h4><p>Push a payload to one chosen client or to everyone, in text or hex, straight from the dashboard.</p></div>
+      <div class="glass feat-card c-violet reveal"><span class="ic">&#9993;</span><h4>Command protocol</h4><p>Built-in <code>/ping</code> <code>/stats</code> <code>/users</code> <code>/whoami</code> <code>/nick</code> <code>/quit</code>, toggleable per config.</p></div>
+      <div class="glass feat-card c-violet reveal"><span class="ic">&#128274;</span><h4>Optional auth gate</h4><p>Require a token (<code>/auth &lt;token&gt;</code>), with automatic disconnect after repeated failures.</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="drive">
+    <div class="cat-header reveal"><span class="label">04 · Drive</span><h2>Drive it &amp; <span class="gradient-text">generate traffic</span></h2>
+      <p class="subtitle">Make the endpoint talk on its own, on a schedule.</p></div>
+    <div class="feat-grid">
+      <div class="glass feat-card c-lime reveal"><span class="ic">&#8776;</span><h4>Timed feeds</h4><p>Broadcast a templated payload to every connected client on a timer — as often as 20&times; a second, or as slow as you like.</p></div>
+      <div class="glass feat-card c-lime reveal"><span class="ic">&#127758;</span><h4>Built-in geo stream</h4><p>A ready-made world-map feed — cities plus moving ships and planes as marker JSON — folded in from the sibling FTXUI map project.</p></div>
+      <div class="glass feat-card c-lime reveal"><span class="ic">&#9974;</span><h4>Seven scenario presets</h4><p>Echo, chat relay, IoT sensor, mock line-API, binary device, geo map and auth-gated — each wires up transport, framing, rules and feeds in one click.</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="capture">
+    <div class="cat-header reveal"><span class="label">05 · Replay</span><h2>Capture, export, <span class="gradient-text">replay</span></h2>
+      <p class="subtitle">Record a session once; hand it to a student, a colleague or your future self.</p></div>
+    <div class="feat-grid">
+      <div class="glass feat-card c-amber reveal"><span class="ic">&#9679;</span><h4>Session recorder</h4><p>Capture every message — in, out, broadcast, system — with one click, live counter in the title bar.</p></div>
+      <div class="glass feat-card c-amber reveal"><span class="ic">&#8681;</span><h4>JSONL export / import</h4><p>Save a session to a portable file and load it back in later, on any machine.</p></div>
+      <div class="glass feat-card c-amber reveal"><span class="ic">&#9654;</span><h4>Replay to live clients</h4><p>Play a capture back with its <b>original inter-message timing</b>, from 0.5&times; up to full speed, filtered by direction, on a loop if you want. Any newline-delimited text file replays too.</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="built">
+    <div class="cat-header reveal"><span class="label">06 · Built</span><h2>Built <span class="gradient-text">right</span></h2>
+      <p class="subtitle">Small, self-contained, and honest about what it is.</p></div>
+    <div class="feat-grid">
+      <div class="glass feat-card c-cyan reveal"><span class="ic">&#128230;</span><h4>One ~6 MB binary</h4><p>Tauri 2 · Rust · Tokio. No .NET, no Node, no Python — nothing to install alongside it. Ships as an MSI and an NSIS installer; cross-platform by design on Tauri.</p></div>
+      <div class="glass feat-card c-cyan reveal"><span class="ic">&#9635;</span><h4>Lean frontend</h4><p>Pure HTML / CSS / vanilla JS — no framework, a locked-down content-security-policy, boots instantly.</p></div>
+      <div class="glass feat-card c-cyan reveal"><span class="ic">&#10003;</span><h4>Tested core</h4><p>18 unit tests cover the framing codec, payload parsing, the rule engine and the template renderer. Config persists to disk automatically.</p></div>
+    </div>
+  </section>
+
+  <div class="callout reveal">
+    <h3>&#9888; Honest scope</h3>
+    <p>It is a <b>single-host tool</b>, and that focus is the point. It is <b>not</b> a load generator,
+    a protocol analyser, or an API client — it's the endpoint those tools talk to, and the one place
+    you can watch the whole exchange happen.</p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</div>
+        <p>A scriptable TCP + UDP endpoint with a real-time dashboard. Bind a port, watch everything, script the replies.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="features.html">Features</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="docs.html">Documentation</a>
+        <a href="use-cases.html">Use Cases</a>
+      </div>
+      <div class="footer-col">
+        <h5>MYTHOS</h5>
+        <a href="docs.html#download">Download</a>
+        <a href="use-cases.html">Pairs with Pcapsule</a>
+        <a href="docs.html#protocol">Client protocol</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 BADWOLF Labs. Open source under the MIT License.</span>
+      <span>Built with Tauri 2 &middot; Rust &middot; Tokio</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  document.querySelector(".nav-hamburger")?.addEventListener("click", () => document.querySelector(".nav-links").classList.toggle("open"));
+</script>
+</body>
+</html>

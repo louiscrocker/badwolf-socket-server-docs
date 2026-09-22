@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docs — BADWOLF Socket Server</title>
+<meta name="description" content="Install, quick start, client protocol, scenario presets and configuration for the BADWOLF Socket Server." />
+<meta name="theme-color" content="#03000a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="bg"></div><div class="grid-bg"></div><div class="scan"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</a>
+    <button class="nav-hamburger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="use-cases.html">Use Cases</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="docs.html" class="active">Docs</a>
+      <a href="demo.html">Demo</a>
+      <a href="docs.html#download" class="nav-cta">Download</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero" style="padding-bottom:20px;">
+  <div class="container">
+    <div class="kicker reveal">// install &middot; run &middot; speak to it</div>
+    <h1 class="reveal reveal-delay-1" style="font-size:clamp(30px,5vw,48px);">Documentation</h1>
+    <p class="hero-tagline reveal reveal-delay-2">From download to your first scripted reply in a couple of minutes.</p>
+  </div>
+</section>
+
+<main class="container">
+
+  <!-- DOWNLOAD -->
+  <section class="section" id="download">
+    <div class="cat-header reveal"><span class="label">Get it</span><h2>Download &amp; <span class="gradient-text">install</span></h2>
+      <p class="subtitle">Windows ships as an MSI or an NSIS setup. The same source builds on macOS and Linux via Tauri.</p></div>
+    <div class="grid-2">
+      <div class="glass feature-card reveal">
+        <h4>Installer (Windows)</h4>
+        <p>Grab the release build and run either bundle:</p>
+        <pre><code>BADWOLF Socket Server_1.1.0_x64_en-US.msi
+BADWOLF Socket Server_1.1.0_x64-setup.exe</code></pre>
+        <p>A single ~6&nbsp;MB app. No .NET, no Node, nothing else to install.</p>
+      </div>
+      <div class="glass feature-card reveal reveal-delay-1">
+        <h4>Build from source</h4>
+        <p>Needs Rust and Node:</p>
+        <pre><code>npm install
+npm run dev      # build + launch
+npm run build    # release bundle in
+                 # src-tauri/target/release/bundle</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK START -->
+  <section class="section">
+    <div class="cat-header reveal"><span class="label">Quick start</span><h2>First run in <span class="gradient-text">four steps</span></h2></div>
+    <div class="glass reveal" style="padding:30px;">
+      <div class="steps">
+        <div class="step"><div><h4>Pick a scenario</h4><p>Open the <b>CONFIG</b> tab, choose a preset from the dropdown (start with <b>ECHO CHAMBER</b> or <b>IOT SENSOR</b>) and hit LOAD.</p></div></div>
+        <div class="step"><div><h4>Start the listener</h4><p>Hit <b>START</b>. The status pill goes ONLINE and the bind address shows in the footer.</p></div></div>
+        <div class="step"><div><h4>Connect a client</h4><p><code>ncat 127.0.0.1 8888</code>, or run the bundled probe: <code>python tools/probe.py</code>. UDP: add <code>--udp</code>.</p></div></div>
+        <div class="step"><div><h4>Watch &amp; script</h4><p>Every message appears in the stream. Add rules in the <b>RULES</b> tab, drive a feed, record a session, or KICK a client — all live.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROTOCOL -->
+  <section class="section" id="protocol">
+    <div class="cat-header reveal"><span class="label">Client protocol</span><h2>Talking to <span class="gradient-text">the endpoint</span></h2>
+      <p class="subtitle">Messages are framed per config (newline by default). Unmatched input is echoed or ignored per the reply mode; rules and commands run first. When commands are enabled:</p></div>
+    <div class="glass reveal" style="padding:8px 22px;">
+      <table>
+        <thead><tr><th>Command</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td><code>/ping</code></td><td><code>{"type":"pong","ts":"…"}</code></td></tr>
+          <tr><td><code>/stats</code></td><td>full metrics snapshot</td></tr>
+          <tr><td><code>/users</code></td><td>connected client list</td></tr>
+          <tr><td><code>/whoami</code></td><td>your client id, address and name</td></tr>
+          <tr><td><code>/nick &lt;name&gt;</code></td><td>set a display name</td></tr>
+          <tr><td><code>/auth &lt;token&gt; [name]</code></td><td>authenticate when REQUIRE.AUTH is on</td></tr>
+          <tr><td><code>/quit</code></td><td>graceful disconnect</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout reveal">
+      <h3>&#9654; The bundled probe</h3>
+      <p><code>python tools/probe.py</code> runs a command tour; <code>--send "GET /x"</code> fires one line; <code>--hold 30</code> connects and just listens (good for feeds); <code>--udp --port 9100</code> switches transport. Stdlib only.</p>
+    </div>
+  </section>
+
+  <!-- RULES + TEMPLATES -->
+  <section class="section">
+    <div class="cat-header reveal"><span class="label">Auto-responder</span><h2>Rules &amp; <span class="gradient-text">templates</span></h2>
+      <p class="subtitle">A rule matches a message and sends a templated reply. First enabled match wins; edits apply live.</p></div>
+    <div class="grid-2">
+      <div class="glass feature-card reveal">
+        <h4>Match modes</h4>
+        <p><code>any</code> · <code>exact</code> · <code>prefix</code> · <code>contains</code> · <code>regex</code> (with capture groups) · <code>hex-prefix</code> (match raw bytes). Reply in text or hex; add a delay, target the sender or broadcast, and optionally hang up after.</p>
+      </div>
+      <div class="glass feature-card reveal reveal-delay-1">
+        <h4>Template placeholders</h4>
+        <p><code>{client_id8}</code> <code>{client_addr}</code> <code>{server_name}</code> <code>{seq}</code> <code>{ts}</code> <code>{ts_unix}</code> <code>{input}</code> <code>{len}</code> <code>{match}</code> <code>{g1}</code>…<code>{g9}</code> <code>{rand}</code> <code>{rand:a-b}</code> <code>{randf:a-b}</code> <code>{choice:a|b|c}</code>.</p>
+      </div>
+    </div>
+    <p class="subtitle reveal" style="margin-top:16px;">Example: a regex rule <code>^GET\s+(\S+)</code> replying <code>{"status":200,"path":"{g1}","seq":{seq}}</code> turns the endpoint into a tiny line-API.</p>
+  </section>
+
+  <!-- CONFIG -->
+  <section class="section">
+    <div class="cat-header reveal"><span class="label">Configuration</span><h2>Settings &amp; <span class="gradient-text">persistence</span></h2></div>
+    <div class="glass feature-card reveal">
+      <p>Config is saved automatically to your app config directory and reloaded on launch:</p>
+      <pre><code>%APPDATA%\com.badwolf.socket-server\config.json</code></pre>
+      <p style="margin-top:10px;">Bind address, port, transport and framing take effect on the next <b>START</b>; rules, feeds, reply mode, auth token and greeting apply <b>live</b> while running. The path is shown at the bottom of the CONFIG tab.</p>
+    </div>
+  </section>
+
+  <section class="quote-section">
+    <div class="container">
+      <blockquote class="reveal">Stuck? The whole thing is one window and one binary —
+        <span class="gradient-text">START, connect, watch.</span></blockquote>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="glyph">&#9132;</span> BADWOLF.SOCKET</div>
+        <p>A scriptable TCP + UDP endpoint with a real-time dashboard. Bind a port, watch everything, script the replies.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="features.html">Features</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="docs.html">Documentation</a>
+        <a href="use-cases.html">Use Cases</a>
+      </div>
+      <div class="footer-col">
+        <h5>MYTHOS</h5>
+        <a href="docs.html#download">Download</a>
+        <a href="use-cases.html">Pairs with Pcapsule</a>
+        <a href="docs.html#protocol">Client protocol</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 BADWOLF Labs. Open source under the MIT License.</span>
+      <span>Built with Tauri 2 &middot; Rust &middot; Tokio</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  document.querySelector(".nav-hamburger")?.addEventListener("click", () => document.querySelector(".nav-links").classList.toggle("open"));
+</script>
+</body>
+</html>
