@@ -43,7 +43,7 @@
   <!-- DOWNLOAD -->
   <section class="section" id="download">
     <div class="cat-header reveal"><span class="label">Get it</span><h2>Download &amp; <span class="gradient-text">install</span></h2>
-      <p class="subtitle">Windows ships as an MSI or an NSIS setup. The same source builds on macOS and Linux via Tauri.</p></div>
+      <p class="subtitle">Windows ships as an MSI or an NSIS setup. macOS and Linux aren't packaged yet; the Tauri source should build there but is untested.</p></div>
     <div class="grid-2">
       <div class="glass feature-card reveal">
         <h4>Installer (Windows)</h4>
@@ -51,6 +51,7 @@
         <pre><code>BADWOLF Socket Server_1.1.0_x64_en-US.msi
 BADWOLF Socket Server_1.1.0_x64-setup.exe</code></pre>
         <p>A single ~6&nbsp;MB app. No .NET, no Node, nothing else to install.</p>
+        <p>Verify the download against <code>SHA256SUMS.txt</code> (<code>Get-FileHash &lt;file&gt;</code>). 1.1.0 is <b>not code-signed</b> yet, so SmartScreen may warn: choose <b>More info &rarr; Run anyway</b>.</p>
       </div>
       <div class="glass feature-card reveal reveal-delay-1">
         <h4>Build from source</h4>
