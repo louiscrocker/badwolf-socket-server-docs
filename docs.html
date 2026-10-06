@@ -43,23 +43,23 @@
   <!-- DOWNLOAD -->
   <section class="section" id="download">
     <div class="cat-header reveal"><span class="label">Get it</span><h2>Download &amp; <span class="gradient-text">install</span></h2>
-      <p class="subtitle">Windows ships as an MSI or an NSIS setup. macOS and Linux aren't packaged yet; the Tauri source should build there but is untested.</p></div>
+      <p class="subtitle">Windows ships as an MSI or an NSIS setup. macOS and Linux aren't available yet.</p></div>
     <div class="grid-2">
       <div class="glass feature-card reveal">
         <h4>Installer (Windows)</h4>
-        <p>Grab the release build and run either bundle:</p>
-        <pre><code>BADWOLF Socket Server_1.1.0_x64_en-US.msi
-BADWOLF Socket Server_1.1.0_x64-setup.exe</code></pre>
+        <p>Grab the latest release from <a href="https://github.com/louiscrocker/badwolf-socket-server-releases/releases/latest">GitHub Releases</a> and run either installer:</p>
+        <pre><code>BADWOLF.Socket.Server_1.1.0_x64_en-US.msi
+BADWOLF.Socket.Server_1.1.0_x64-setup.exe</code></pre>
         <p>A single ~6&nbsp;MB app. No .NET, no Node, nothing else to install.</p>
         <p>Verify the download against <code>SHA256SUMS.txt</code> (<code>Get-FileHash &lt;file&gt;</code>). 1.1.0 is <b>not code-signed</b> yet, so SmartScreen may warn: choose <b>More info &rarr; Run anyway</b>.</p>
       </div>
       <div class="glass feature-card reveal reveal-delay-1">
-        <h4>Build from source</h4>
-        <p>Needs Rust and Node:</p>
-        <pre><code>npm install
-npm run dev      # build + launch
-npm run build    # release bundle in
-                 # src-tauri/target/release/bundle</code></pre>
+        <h4>Test client (optional)</h4>
+        <p>The release also ships <code>probe.py</code>, a tiny standard-library Python client for poking the server:</p>
+        <pre><code>python probe.py                 # TCP command tour
+python probe.py --udp --port 9100
+python probe.py --hold 30       # watch a feed</code></pre>
+        <p><a href="https://github.com/louiscrocker/badwolf-socket-server-releases/releases/latest" class="btn btn-primary">&#9662; Download from GitHub</a></p>
       </div>
     </div>
   </section>
@@ -71,7 +71,7 @@ npm run build    # release bundle in
       <div class="steps">
         <div class="step"><div><h4>Pick a scenario</h4><p>Open the <b>CONFIG</b> tab, choose a preset from the dropdown (start with <b>ECHO CHAMBER</b> or <b>IOT SENSOR</b>) and hit LOAD.</p></div></div>
         <div class="step"><div><h4>Start the listener</h4><p>Hit <b>START</b>. The status pill goes ONLINE and the bind address shows in the footer.</p></div></div>
-        <div class="step"><div><h4>Connect a client</h4><p><code>ncat 127.0.0.1 8888</code>, or run the bundled probe: <code>python tools/probe.py</code>. UDP: add <code>--udp</code>.</p></div></div>
+        <div class="step"><div><h4>Connect a client</h4><p><code>ncat 127.0.0.1 8888</code>, or the release's test client: <code>python probe.py</code>. UDP: add <code>--udp</code>.</p></div></div>
         <div class="step"><div><h4>Watch &amp; script</h4><p>Every message appears in the stream. Add rules in the <b>RULES</b> tab, drive a feed, record a session, or KICK a client — all live.</p></div></div>
       </div>
     </div>
@@ -96,8 +96,8 @@ npm run build    # release bundle in
       </table>
     </div>
     <div class="callout reveal">
-      <h3>&#9654; The bundled probe</h3>
-      <p><code>python tools/probe.py</code> runs a command tour; <code>--send "GET /x"</code> fires one line; <code>--hold 30</code> connects and just listens (good for feeds); <code>--udp --port 9100</code> switches transport. Stdlib only.</p>
+      <h3>&#9654; The probe client</h3>
+      <p><a href="https://github.com/louiscrocker/badwolf-socket-server-releases/releases/latest"><code>probe.py</code></a> (attached to each release) runs a command tour with <code>python probe.py</code>; <code>--send "GET /x"</code> fires one line; <code>--hold 30</code> connects and just listens (good for feeds); <code>--udp --port 9100</code> switches transport. Stdlib only.</p>
     </div>
   </section>
 
@@ -158,7 +158,7 @@ npm run build    # release bundle in
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; 2026 BADWOLF Labs. Open source under the MIT License.</span>
+      <span>&copy; 2026 BADWOLF Labs. Free to use &middot; closed source.</span>
       <span>Built with Tauri 2 &middot; Rust &middot; Tokio</span>
     </div>
   </div>
